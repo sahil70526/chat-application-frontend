@@ -1,6 +1,6 @@
 import React from 'react'
 import { useEffect } from 'react'
-import { GoogleLogin } from "react-google-login"
+// import { GoogleLogin } from "react-google-login"
 import { gapi } from "gapi-script"
 import { googleAuth } from '../apis/auth'
 import { useState } from 'react'
@@ -18,21 +18,21 @@ function Login() {
   const [isLoading, setIsLoading] = useState(false)
   const [showPass, setShowPass] = useState(false)
   const pageRoute = useNavigate()
-  const googleSuccess = async (res) => {
-    if (res?.profileObj) {
-      console.log(res.profileObj)
-      setIsLoading(true)
-      const response = await googleAuth({ tokenId: res.tokenId })
-      setIsLoading(false)
+  // const googleSuccess = async (res) => {
+  //   if (res?.profileObj) {
+  //     console.log(res.profileObj)
+  //     setIsLoading(true)
+  //     const response = await googleAuth({ tokenId: res.tokenId })
+  //     setIsLoading(false)
 
-      console.log("response :" + res)
-      if (response.data.token) {
-        localStorage.setItem("userToken", response.data.token)
-        pageRoute("/chats")
+  //     console.log("response :" + res)
+  //     if (response.data.token) {
+  //       localStorage.setItem("userToken", response.data.token)
+  //       pageRoute("/chats")
 
-      }
-    }
-  }
+  //     }
+  //   }
+  // }
   const googleFailure = (error) => {
     // toast.error("Something went Wrong.Try Again!")
   }
@@ -114,7 +114,7 @@ function Login() {
             </button>
             {/* <div className='border-t-[1px] w-[100%] sm:w-[80%] my-3' ></div> */}
             <p className='text-[#fff] text-center sm:-ml-20'>/</p>
-            <GoogleLogin
+            {/* <GoogleLogin
               clientId={process.env.REACT_APP_CLIENT_ID}
               render={(renderProps) => (
                 <button style={{ borderImage: "linear-gradient(to right, rgba(0,195,154,1) 50%, rgba(224,205,115,1) 80%)", borderImageSlice: "1" }} onClick={renderProps.onClick} disabled={renderProps.disabled} aria-label="Continue with google" className="focus:ring-2 focus:ring-offset-1  py-3.5 px-4 border rounded-lg  flex items-center w-[100%]  sm:w-[80%]" disableElevation={true} disablefocusRipple={true}>
@@ -126,7 +126,7 @@ function Login() {
               onFailure={googleFailure}
               cookiePolicy={'single_host_origin'}
               scope="profile email https://www.googleapis.com/auth/user.birthday.read"
-            />
+            /> */}
 
 
           </form>
