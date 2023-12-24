@@ -17,9 +17,9 @@ import { getSender } from '../utils/logics'
 import { setActiveChat } from '../redux/chatsSlice'
 import Group from '../components/Group'
 import Contacts from '../components/Contacts'
-import { Effect } from "react-notification-badge"
+// import { Effect } from "react-notification-badge"
 // import NotificationBadge from 'react-notification-badge/lib/components/NotificationBadge';
-import NotificationBadge from 'react-notification-badge';
+// import NotificationBadge from 'react-notification-badge';
 import Search from '../components/group/Search'
 function Home() {
   const dispatch = useDispatch()
@@ -86,11 +86,11 @@ function Home() {
                   </div>
                   <div className='absolute top-4 right-5 flex items-center gap-x-3'>
                     <button onClick={() => dispatch(setShowNotifications(!showNotifications))}>
-                      <NotificationBadge
+                      {/* <NotificationBadge
                         count={notifications.length}
                         effect={Effect.SCALE}
                         style={{ width: "15px", height: "15px", fontSize: "9px", padding: "4px 2px 2px 2px" }}
-                      />
+                      /> */}
                       {
                         showNotifications ? <RiNotificationBadgeFill style={{ width: "25px", height: "25px", color: "#319268" }} /> : <BiNotification style={{ color: "#319268", width: "25px", height: "25px" }} />
                       }

@@ -6,7 +6,7 @@ const initialState = {
   activeChat: '',
   isLoading: false,
   notifications: [],
-  isTyping:false
+  isTyping: false
 };
 export const fetchChats = createAsyncThunk('redux/chats', async () => {
   try {
@@ -26,22 +26,23 @@ const chatsSlice = createSlice({
     setNotifications: (state, { payload }) => {
       state.notifications = payload;
     },
-    setUserIsTyping : (state,action)=>{
+    setUserIsTyping: (state, action) => {
       state.isTyping = action.payload;
     }
   },
-  extraReducers: {
-    [fetchChats.pending]: (state) => {
+
+  extraReducers: (builder) => {
+    builder.addCase(fetchChats.pending, (state) => {
       state.isLoading = true;
-    },
-    [fetchChats.fulfilled]: (state, { payload }) => {
-      state.chats = payload;
+    })
+    builder.addCase(fetchChats.fulfilled, (state, action) => {
+      state.chats = action.payload;
       state.isLoading = false;
-    },
-    [fetchChats.rejected]: (state) => {
-      state.isLoading = false;
-    },
-  },
+    })
+    builder.addCase(fetchChats.rejected, (state, action) => {
+      state.isLoading = false
+    })
+  }
 });
 export const { setActiveChat, setNotifications, setUserIsTyping } = chatsSlice.actions;
 export default chatsSlice.reducer;
