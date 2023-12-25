@@ -49,12 +49,14 @@ function Profile(props) {
             <h6 className='text-[16px] text-[#fff] font-semibold'>Profile</h6>
           </button>
         </div>
-        <div className=' pt-5'>
+        <div className=' pt-5 group' >
           <div className='flex items-center flex-col'>
             {/* class="h-auto max-w-lg transition-all duration-300 rounded-lg blur-sm hover:blur-none" */}
             <img className='w-[150px] h-[150px] rounded-[100%] -ml-5 transition-all duration-300 hover:blur-sm cursor-pointer' src={formData?.imageName ? `${process.env.REACT_APP_SERVER_URL}/api/user/profileImage/download/${formData.imageName}` : activeUser?.profilePic} alt="" />
-            <div className='invisible hover:visible'>
-              <Icon color='green' name='add circle' size='big' style={{ position: "absolute", zIndex: "1", top: 150,left:155, cursor: "pointer" }} onClick={() => document.getElementById("input-image").click()} />
+            <div>
+              <button className='invisible group-hover:visible'>
+              <Icon  color='green' name='add circle' size='big' style={{ position: "absolute", zIndex: "1", top: 150,left:155, cursor: "pointer" }} onClick={() => document.getElementById("input-image").click()} />
+              </button>
             </div>
             <input type='file' id='input-image' hidden="true" onChange={addNewImage} />
           </div>
