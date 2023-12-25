@@ -35,8 +35,8 @@ const chatsSlice = createSlice({
     builder.addCase(fetchChats.pending, (state) => {
       state.isLoading = true;
     })
-    builder.addCase(fetchChats.fulfilled, (state, action) => {
-      state.chats = action.payload;
+    builder.addCase(fetchChats.fulfilled, (state, {payload}) => {
+      state.chats = payload;
       state.isLoading = false;
     })
     builder.addCase(fetchChats.rejected, (state, action) => {

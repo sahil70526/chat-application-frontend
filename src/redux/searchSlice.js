@@ -25,8 +25,8 @@ const searchSlice = createSlice({
     builder.addCase(searchUserThunk.pending, (state) => {
       state.isLoading = true;
     })
-    builder.addCase(searchUserThunk.fulfilled, (state, action) => {
-      state.searchResults = action.payload;
+    builder.addCase(searchUserThunk.fulfilled, (state, {payload}) => {
+      state.searchResults = payload;
       state.isLoading = false;
     })
     builder.addCase(searchUserThunk.rejected, (state, action) => {
