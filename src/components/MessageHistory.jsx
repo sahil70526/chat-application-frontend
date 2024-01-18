@@ -4,9 +4,10 @@ import ScrollableFeed from "react-scrollable-feed"
 import { isSameSender, isSameSenderMargin, isSameUser, isLastMessage } from '../utils/logics'
 import { Tooltip } from "@chakra-ui/tooltip";
 import { Avatar } from "@chakra-ui/avatar";
+import { Image } from 'semantic-ui-react'
 import "../pages/home.css"
 function MessageHistory({ messages }) {
-  const activeUser = useSelector((state) => state.activeUser)
+  const activeUser = useSelector((state) => state.activeUser);
 
   return (
     <>
@@ -30,7 +31,7 @@ function MessageHistory({ messages }) {
                   </Tooltip>
 
                 )}
-              <span className='tracking-wider text-[15px]  font-medium'
+              {m.messageType === "text" && <span className='tracking-wider text-[15px]  font-medium'
                 style={{
                   backgroundColor: `${m.sender._id === activeUser.id ? "#dcf8c6" : "#f0f0f0"
                     }`,
@@ -43,7 +44,41 @@ function MessageHistory({ messages }) {
                 }}
               >
                 {m.message}
-              </span>
+              </span>}
+              {m.messageType === 'image' &&
+                <Image src={m.message} size='medium' rounded style={{
+                  marginLeft: isSameSenderMargin(messages, m, i, activeUser.id),
+                  marginTop: isSameUser(messages, m, i, activeUser.id) ? 3 : 10,
+                  borderRadius: `${m.sender._id === activeUser.id ? "10px 10px 0px 10px" : "10px 10px 10px 0"}`
+                }} />
+              }
+
+              {m.messageType === 'video' &&
+                <video className="h-2/3 w-1/4 rounded-md" controls
+                  style={{
+                    marginLeft: isSameSenderMargin(messages, m, i, activeUser.id),
+                    marginTop: isSameUser(messages, m, i, activeUser.id) ? 3 : 10,
+                    borderRadius: `${m.sender._id === activeUser.id ? "10px 10px 0px 10px" : "10px 10px 10px 0"}`
+                  }}
+                >
+                  <source src={m.message} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              }
+
+              {m.messageType === 'audio' &&
+                <audio controls
+                  style={{
+                    marginLeft: isSameSenderMargin(messages, m, i, activeUser.id),
+                    marginTop: isSameUser(messages, m, i, activeUser.id) ? 3 : 10,
+                    borderRadius: `${m.sender._id === activeUser.id ? "10px 10px 0px 10px" : "10px 10px 10px 0"}`
+                  }}
+                >
+                  <source src={m.message} type="audio/mpeg" />
+                  Your browser does not support the video tag.
+                </audio>
+              }
+
             </div>
           ))
         }

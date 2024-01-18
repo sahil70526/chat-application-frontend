@@ -15,6 +15,7 @@ import { getChatName } from '../utils/logics';
 import Typing from '../components/ui/Typing';
 import { validUser } from '../apis/auth';
 import { Icon } from 'semantic-ui-react'
+import { shareMedia } from '../apis/messages';
 const ENDPOINT = process.env.REACT_APP_SERVER_URL
 let socket, selectedChatCompare;
 
@@ -34,9 +35,18 @@ function Chat(props) {
     if ((e.key === "Enter" || e.type === "click") && (message)) {
       setMessage("")
       socket.emit("stop typing", activeChat._id)
-      const data = await sendMessage({ chatId: activeChat._id, message })
+      const data = await sendMessage({ chatId: activeChat._id, messageType: "text", message })
       socket.emit("new message", data)
       setMessages([...messages, data])
+      dispatch(fetchChats())
+    }
+    if (e.target.files) {
+      setMessage("")
+      socket.emit("stop typing", activeChat._id)
+      let data = await shareMedia(e.target.files[0]);
+      const data1 = await sendMessage({ chatId: activeChat._id, messageType: data.contentType, message: data.mediaUrl });
+      socket.emit("new message", data1)
+      setMessages([...messages, data1])
       dispatch(fetchChats())
     }
   }
@@ -98,6 +108,11 @@ function Chat(props) {
       <Loading />
     </div>
   }
+
+  // const addNewMediaMessage = async (e) => {
+  //   let data = await shareMedia(e.target.files[0]);
+
+  // }
   return (
     <>
       {
@@ -158,7 +173,11 @@ function Chat(props) {
                     className='w-[10rem] sm:w-[15rem] md:w-[25rem] h-[50px] lg:w-[55rem] rounded-[10px] focus:outline-0 w-[100%] h-[50px] bg-[#fff]' type="text" name="message" placeholder="Enter message" value={message} />
                 </form>
                 {(typing || message.length > 0) ? <Icon name='paper plane' color='green' circular='true' size='large' onClick={(e) => keyDownFunction(e)} style={{ cursor: 'pointer' }} /> :
-                  <Icon name='microphone' color='white' circular='true' size='large' onClick={(e) => keyDownFunction(e)} style={{ cursor: 'pointer' }} />}
+                  <Icon name='microphone' color='white' circular='true' size='large' style={{ cursor: 'pointer' }} onClick={() => document.getElementById("capture").click()} />}
+                <Icon name='folder open outline' color='white' circular='true' size='large' onClick={() => document.getElementById("input-image").click()} style={{ cursor: 'pointer' }} />
+                <input type='file' id='input-image' hidden="true" onChange={keyDownFunction} />
+                {/* <input type='audio' id='input-audio' hidden="true" control onChange={keyDownFunction} /> */}
+                <input type="file" accept="audio/*" id="capture" hidden="true" capture="microphone" onChange={keyDownFunction}/>
               </div>
             </div>
           </div> :
