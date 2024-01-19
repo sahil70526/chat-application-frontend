@@ -46,6 +46,7 @@ function Chat(props) {
   }
 
   const messageLogic = async (e, mtype) => {
+    console.log(e);
     setMessage("")
     socket.emit("stop typing", activeChat._id)
     let data = (e.size) && await shareMedia(e);
@@ -71,7 +72,7 @@ function Chat(props) {
     const fetchMessagesFunc = async () => {
       if (activeChat) {
         setLoading(true)
-        const data = await fetchMessages(activeChat._id)
+        const data = await fetchMessages(activeChat._id);
         setMessages(data)
         socket.emit("join room", activeChat._id)
         setLoading(false)
@@ -147,7 +148,7 @@ function Chat(props) {
               <div>
               </div>
             </div>
-            <div className='scrollbar-hide w-[100%] h-[70vh] md:h-[66vh] lg:h-[69vh] flex flex-col overflow-y-scroll p-4' >
+            <div className='scrollbar-hide w-[100%] h-[80%] md:h-[50%] lg:h-[83%] flex flex-col overflow-y-scroll p-4' >
               <MessageHistory typing={isTyping} messages={messages} />
               <div className='ml-7 -mb-10'>
                 {

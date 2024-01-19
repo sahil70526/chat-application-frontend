@@ -50,9 +50,7 @@ export const isSameSender = (messages, m, i, userId) => {
 };
 export const isLastMessage = (messages, i, userId) => {
   return (
-    i === messages.length - 1 &&
-    messages[messages.length - 1].sender._id !== userId &&
-    messages[messages.length - 1].sender._id
+    (messages[messages.length - 1].sender._id !== userId) && (i === messages.length - 1)
   );
 };
 export const isSameUser = (messages, m, i) => {
@@ -65,13 +63,13 @@ export const getChatName = (activeChat, activeUser) => {
   return activeChat?.isGroup
     ? activeChat?.chatName
     : activeChat?.users[0]?._id === activeUser.id
-    ? activeChat?.users[1]?.name
-    : activeChat?.users[0]?.name;
+      ? activeChat?.users[1]?.name
+      : activeChat?.users[0]?.name;
 };
 export const getChatPhoto = (activeChat, activeUser) => {
   return activeChat?.isGroup
     ? activeChat.photo
     : activeChat?.users[0]?._id === activeUser?.id
-    ? activeChat?.users[1]?.profilePic
-    : activeChat?.users[0]?.profilePic;
+      ? activeChat?.users[1]?.profilePic
+      : activeChat?.users[0]?.profilePic;
 };

@@ -11,11 +11,11 @@ function MessageHistory({ messages }) {
 
   return (
     <>
-      <ScrollableFeed className='scrollbar-hide'>
+      {/* <ScrollableFeed className='scrollbar-hide'> */}
+      <div className='overflow-y-hidden'>
         {messages &&
-          messages.map((m, i) => (
-
-            <div className='flex items-center gap-x-[6px]' key={m._id} >
+          messages.map((m, i) => {
+            return <div className='flex items-center gap-x-[6px]' key={m._id} >
               {(isSameSender(messages, m, i, activeUser.id) ||
                 isLastMessage(messages, i, activeUser.id)) && (
                   <Tooltip label={m.sender?.name} placement="bottom-start" hasArrow>
@@ -80,10 +80,10 @@ function MessageHistory({ messages }) {
               }
 
             </div>
-          ))
+          })
         }
-
-      </ScrollableFeed >
+      </div>
+      {/* </ScrollableFeed > */}
     </>
   )
 }
