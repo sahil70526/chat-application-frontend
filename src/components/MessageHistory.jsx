@@ -11,8 +11,8 @@ function MessageHistory({ messages }) {
 
   return (
     <>
-      {/* <ScrollableFeed className='scrollbar-hide'> */}
-      <div className='overflow-y-hidden'>
+      <ScrollableFeed className='scrollbar-hide'>
+      {/* <div className='overflow-y-hidden'> */}
         {messages &&
           messages.map((m, i) => {
             return <div className='flex items-center gap-x-[6px]' key={m._id} >
@@ -82,8 +82,8 @@ function MessageHistory({ messages }) {
             </div>
           })
         }
-      </div>
-      {/* </ScrollableFeed > */}
+      {/* </div> */}
+      </ScrollableFeed >
     </>
   )
 }

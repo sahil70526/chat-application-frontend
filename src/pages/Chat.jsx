@@ -148,7 +148,7 @@ function Chat(props) {
               <div>
               </div>
             </div>
-            <div className='scrollbar-hide w-[100%] h-[80%] md:h-[50%] lg:h-[83%] flex flex-col overflow-y-scroll p-4' >
+            <div className='scrollbar-hide w-[100%] h-[80%] md:h-[50%] lg:h-[90%] flex flex-col overflow-y-scroll p-4' >
               <MessageHistory typing={isTyping} messages={messages} />
               <div className='ml-7 -mb-10'>
                 {
