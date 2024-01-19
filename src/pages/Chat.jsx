@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Model from '../components/Model';
 import { BsEmojiSmile, BsFillEmojiSmileFill } from "react-icons/bs"
@@ -16,6 +16,7 @@ import Typing from '../components/ui/Typing';
 import { validUser } from '../apis/auth';
 import { Icon } from 'semantic-ui-react'
 import { shareMedia } from '../apis/messages';
+import { ReactMic } from 'react-mic';
 const ENDPOINT = process.env.REACT_APP_SERVER_URL
 let socket, selectedChatCompare;
 
@@ -29,28 +30,30 @@ function Chat(props) {
   const [isTyping, setIsTyping] = useState(false)
   const [loading, setLoading] = useState(false)
   const [showPicker, setShowPicker] = useState(false);
-  const activeUser = useSelector((state) => state.activeUser)
+  const activeUser = useSelector((state) => state.activeUser);
+  const [isRecording, setIsRecording] = useState(false)
 
   const keyDownFunction = async (e) => {
     if ((e.key === "Enter" || e.type === "click") && (message)) {
-      setMessage("")
-      socket.emit("stop typing", activeChat._id)
-      const data = await sendMessage({ chatId: activeChat._id, messageType: "text", message })
-      socket.emit("new message", data)
-      setMessages([...messages, data])
-      dispatch(fetchChats())
+      messageLogic(message, "text");
     }
-    if (e.target.files) {
-      setMessage("")
-      socket.emit("stop typing", activeChat._id)
-      let data = await shareMedia(e.target.files[0]);
-      const data1 = await sendMessage({ chatId: activeChat._id, messageType: data.contentType, message: data.mediaUrl });
-      socket.emit("new message", data1)
-      setMessages([...messages, data1])
-      dispatch(fetchChats())
+    else if (e.target && e.target.files) {
+      messageLogic(e.target.files[0]);
+    }
+    else if (e.size) {
+      messageLogic(e);
     }
   }
 
+  const messageLogic = async (e, mtype) => {
+    setMessage("")
+    socket.emit("stop typing", activeChat._id)
+    let data = (e.size) && await shareMedia(e);
+    const data1 = await sendMessage({ chatId: activeChat._id, messageType: mtype?.length > 0 ? mtype : data.contentType, message: data?.mediaUrl ? data?.mediaUrl : e });
+    socket.emit("new message", data1)
+    setMessages([...messages, data1])
+    dispatch(fetchChats())
+  }
 
   useEffect(() => {
     socket = io(ENDPOINT)
@@ -108,6 +111,21 @@ function Chat(props) {
       <Loading />
     </div>
   }
+
+  const onStartRecording = () => {
+    console.log('Recording started');
+    setIsRecording(true);
+  };
+
+  const onStopRecording = async (recordedBlob) => {
+    console.log('Recording stopped');
+    setIsRecording(false);
+    const audioFile = new File([recordedBlob.blob], 'recorded_audio.wav', {
+      type: 'audio/wav',
+    });
+    // Create a FormData object and append the file
+    keyDownFunction(audioFile)
+  };
 
   // const addNewMediaMessage = async (e) => {
   //   let data = await shareMedia(e.target.files[0]);
@@ -172,12 +190,19 @@ function Chat(props) {
                     style={{ margin: 2 }}
                     className='w-[10rem] sm:w-[15rem] md:w-[25rem] h-[50px] lg:w-[55rem] rounded-[10px] focus:outline-0 w-[100%] h-[50px] bg-[#fff]' type="text" name="message" placeholder="Enter message" value={message} />
                 </form>
+                <div style={{ display: "none" }}>
+                  <ReactMic
+                    record={isRecording}
+                    className="sound-wave"
+                    onStop={onStopRecording}
+                    onStart={onStartRecording}
+                    mimeType="audio/wav"
+                  />
+                </div>
                 {(typing || message.length > 0) ? <Icon name='paper plane' color='green' circular='true' size='large' onClick={(e) => keyDownFunction(e)} style={{ cursor: 'pointer' }} /> :
-                  <Icon name='microphone' color='white' circular='true' size='large' style={{ cursor: 'pointer' }} onClick={() => document.getElementById("capture").click()} />}
+                  <Icon name='microphone' color={isRecording ? "green" : "white"} circular='true' size='large' style={{ cursor: 'pointer' }} onClick={() => setIsRecording(!isRecording)} />}
                 <Icon name='folder open outline' color='white' circular='true' size='large' onClick={() => document.getElementById("input-image").click()} style={{ cursor: 'pointer' }} />
                 <input type='file' id='input-image' hidden="true" onChange={keyDownFunction} />
-                {/* <input type='audio' id='input-audio' hidden="true" control onChange={keyDownFunction} /> */}
-                <input type="file" accept="audio/*" id="capture" hidden="true" capture="microphone" onChange={keyDownFunction}/>
               </div>
             </div>
           </div> :
