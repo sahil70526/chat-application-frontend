@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Model from '../components/Model';
 import { BsEmojiSmile, BsFillEmojiSmileFill } from "react-icons/bs"
@@ -21,7 +21,7 @@ const ENDPOINT = process.env.REACT_APP_SERVER_URL
 let socket, selectedChatCompare;
 
 function Chat(props) {
-  const { activeChat, notifications } = useSelector((state) => state.chats)
+  const { activeChat, notifications,page } = useSelector((state) => state.chats)
   const dispatch = useDispatch()
   const [message, setMessage] = useState("")
   const [messages, setMessages] = useState([])
@@ -31,7 +31,7 @@ function Chat(props) {
   const [loading, setLoading] = useState(false)
   const [showPicker, setShowPicker] = useState(false);
   const activeUser = useSelector((state) => state.activeUser);
-  const [isRecording, setIsRecording] = useState(false)
+  const [isRecording, setIsRecording] = useState(false);
 
   const keyDownFunction = async (e) => {
     if ((e.key === "Enter" || e.type === "click") && (message)) {
@@ -46,7 +46,6 @@ function Chat(props) {
   }
 
   const messageLogic = async (e, mtype) => {
-    console.log(e);
     setMessage("")
     socket.emit("stop typing", activeChat._id)
     let data = (e.size) && await shareMedia(e);
@@ -83,7 +82,23 @@ function Chat(props) {
     fetchMessagesFunc()
     selectedChatCompare = activeChat
 
-  }, [activeChat])
+  }, [activeChat]);
+  useEffect(() => {
+    const fetchMessagesFunc = async () => {
+      if (activeChat) {
+        setLoading(true)
+        const data = await fetchMessages(activeChat._id,page);
+        setMessages([...data,...messages])
+        socket.emit("join room", activeChat._id)
+        setLoading(false)
+
+      }
+      return
+    }
+    fetchMessagesFunc()
+    selectedChatCompare = activeChat
+
+  }, [page])
   useEffect(() => {
     socket.on("message recieved", (newMessageRecieved) => {
       if ((!selectedChatCompare || selectedChatCompare._id) !== newMessageRecieved.chatId._id) {
@@ -128,10 +143,6 @@ function Chat(props) {
     keyDownFunction(audioFile)
   };
 
-  // const addNewMediaMessage = async (e) => {
-  //   let data = await shareMedia(e.target.files[0]);
-
-  // }
   return (
     <>
       {

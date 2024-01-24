@@ -1,18 +1,33 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, { useState } from 'react'
+import { useSelector,useDispatch } from 'react-redux'
 import ScrollableFeed from "react-scrollable-feed"
 import { isSameSender, isSameSenderMargin, isSameUser, isLastMessage } from '../utils/logics'
 import { Tooltip } from "@chakra-ui/tooltip";
 import { Avatar } from "@chakra-ui/avatar";
 import { Image } from 'semantic-ui-react'
 import "../pages/home.css"
-function MessageHistory({ messages }) {
+import { Button } from 'semantic-ui-react'
+import { setPage, fetchChats } from '../redux/chatsSlice'
+
+function MessageHistory({ messages}) {
   const activeUser = useSelector((state) => state.activeUser);
+  const [toggleButton,setToggleButton] = useState(true);
+  const dispatch = useDispatch()
+  const { page } = useSelector((state) => state.chats)
+  const handleClick = ()=>{
+    setToggleButton(!toggleButton);
+    dispatch(setPage(page+1));
+  }
 
   return (
     <>
       <ScrollableFeed className='scrollbar-hide'>
-      {/* <div className='overflow-y-hidden'> */}
+        {toggleButton?<Button color='green' style={{marginLeft:"50%"}} onClick={handleClick}>
+          Load More
+        </Button>:
+        <Button loading color='green' style={{marginLeft:"50%"}} onClick={handleClick}>
+          Load More
+        </Button>}
         {messages &&
           messages.map((m, i) => {
             return <div className='flex items-center gap-x-[6px]' key={m._id} >
@@ -82,7 +97,7 @@ function MessageHistory({ messages }) {
             </div>
           })
         }
-      {/* </div> */}
+        {/* </div> */}
       </ScrollableFeed >
     </>
   )

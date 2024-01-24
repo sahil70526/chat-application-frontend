@@ -113,7 +113,7 @@ function Login() {
               <p style={{ display: isLoading ? "none" : "block" }} className='test-[#fff]'>Login</p>
             </button>
             {/* <div className='border-t-[1px] w-[100%] sm:w-[80%] my-3' ></div> */}
-            <p className='text-[#fff] text-center sm:-ml-20'>/</p>
+            {/* <p className='text-[#fff] text-center sm:-ml-20'>/</p> */}
             {/* <GoogleLogin
               clientId={process.env.REACT_APP_CLIENT_ID}
               render={(renderProps) => (

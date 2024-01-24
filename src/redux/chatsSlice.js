@@ -4,6 +4,7 @@ import { fetchAllChats } from '../apis/chat';
 const initialState = {
   chats: [],
   activeChat: '',
+  page: 1,
   isLoading: false,
   notifications: [],
   isTyping: false
@@ -23,6 +24,9 @@ const chatsSlice = createSlice({
     setActiveChat: (state, { payload }) => {
       state.activeChat = payload;
     },
+    setPage: (state, { payload }) => {
+      state.page = payload
+    },
     setNotifications: (state, { payload }) => {
       state.notifications = payload;
     },
@@ -35,7 +39,7 @@ const chatsSlice = createSlice({
     builder.addCase(fetchChats.pending, (state) => {
       state.isLoading = true;
     })
-    builder.addCase(fetchChats.fulfilled, (state, {payload}) => {
+    builder.addCase(fetchChats.fulfilled, (state, { payload }) => {
       state.chats = payload;
       state.isLoading = false;
     })
@@ -44,5 +48,5 @@ const chatsSlice = createSlice({
     })
   }
 });
-export const { setActiveChat, setNotifications, setUserIsTyping } = chatsSlice.actions;
+export const { setActiveChat, setNotifications, setUserIsTyping,setPage } = chatsSlice.actions;
 export default chatsSlice.reducer;

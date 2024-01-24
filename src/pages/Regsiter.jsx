@@ -113,7 +113,7 @@ function Regsiter() {
             </div>
             <p style={{ display: isLoading ? "none" : "block" }} className='test-[#fff]'>Regsiter</p>
           </button>
-          <p className='text-[#fff] text-center sm:-ml-8'>/</p>
+          {/* <p className='text-[#fff] text-center sm:-ml-8'>/</p> */}
           {/* <GoogleLogin
             clientId={process.env.REACT_APP_CLIENT_ID}
             render={(renderProps) => (
